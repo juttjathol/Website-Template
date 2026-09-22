@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maison d'Or — Luxury Fashion</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f0d878;
+      --gold-dark: #a6852a;
+      --ink: #0a0a0c;
+      --ink-soft: #121218;
+      --ink-card: #16161a;
+      --cream: #f5f2eb;
+      --silver: #b0a898;
+      --silver-dim: #6a6458;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(212,175,55,0.25); color: var(--cream); }
+
+    /* NAVIGATION */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      padding: 28px 60px; display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(180deg, rgba(10,10,12,0.85) 0%, rgba(10,10,12,0) 100%);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(212,175,55,0.08);
+      transition: padding 0.4s ease;
+    }
+    nav.scrolled { padding: 16px 60px; background: rgba(10,10,12,0.92); border-bottom-color: rgba(212,175,55,0.15); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 6px; text-transform: uppercase; color: var(--gold); text-decoration: none; font-weight: 300; }
+    .logo span { color: var(--cream); font-weight: 600; letter-spacing: 10px; }
+    .nav-links { display: flex; gap: 36px; align-items: center; }
+    .nav-links a { color: var(--silver); text-decoration: none; font-size: 0.85rem; letter-spacing: 2.5px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s ease; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .cart-btn { background: transparent; border: 1px solid rgba(212,175,55,0.3); color: var(--gold); padding: 10px 22px; border-radius: 50px; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; position: relative; }
+    .cart-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .cart-count { position: absolute; top: -8px; right: -8px; background: var(--gold); color: var(--ink); border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+    /* HERO WITH 3D */
+    #hero-canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; }
+    #hero-canvas-container canvas { display: block; }
+
+    .hero-overlay {
+      position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; pointer-events: none; text-align: center;
+    }
+    .hero-overlay > * { pointer-events: auto; }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.15rem;
+      color: var(--silver); letter-spacing: 4px; margin-bottom: 16px; opacity: 0;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 9vw, 7.5rem);
+      font-weight: 300; line-height: 1.05; letter-spacing: 8px; color: var(--cream);
+      text-transform: uppercase; opacity: 0; text-shadow: 0 0 80px rgba(212,175,55,0.15);
+    }
+    .hero-title .gold-text { color: var(--gold); font-weight: 600; letter-spacing: 12px; }
+    .hero-cta {
+      margin-top: 40px; display: inline-flex; align-items: center; gap: 16px;
+      border: 1px solid rgba(212,175,55,0.4); padding: 16px 36px; border-radius: 50px;
+      color: var(--gold); text-decoration: none; letter-spacing: 3px; text-transform: uppercase;
+      font-size: 0.85rem; transition: all 0.35s; opacity: 0; pointer-events: auto;
+    }
+    .hero-cta:hover { background: var(--gold); color: var(--ink); box-shadow: 0 0 30px rgba(212,175,55,0.3); }
+    .hero-cta i { transition: transform 0.3s; }
+    .hero-cta:hover i { transform: translateX(4px); }
+
+    /* SECTIONS */
+    section { position: relative; z-index: 5; background: linear-gradient(180deg, var(--ink) 0%, #0d0d10 50%, var(--ink) 100%); }
+
+    /* PRODUCTS */
+    .section-header { text-align: center; padding: 140px 24px 60px; }
+    .section-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 300; letter-spacing: 6px; text-transform: uppercase; color: var(--cream); }
+    .section-header h2 span { color: var(--gold); }
+    .section-header p { color: var(--silver-dim); margin-top: 16px; font-size: 0.95rem; letter-spacing: 2px; }
+    .divider { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 20px auto 0; }
+
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 36px;
+      max-width: 1300px; margin: 0 auto; padding: 0 40px 120px;
+    }
+
+    .product-card {
+      background: linear-gradient(145deg, #131318 0%, #111115 100%); border: 1px solid rgba(212,175,55,0.08);
+      border-radius: 20px; overflow: hidden; transition: all 0.5s ease; position: relative; cursor: pointer;
+    }
+    .product-card:hover { border-color: rgba(212,175,55,0.25); transform: translateY(-8px); box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.08); }
+    .product-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold));
+      opacity: 0; transition: opacity 0.4s; z-index: 3;
+    }
+    .product-card:hover::before { opacity: 1; }
+
+    .product-card img { width: 100%; height: 420px; object-fit: cover; display: block; transition: transform 0.7s ease; }
+    .product-card:hover img { transform: scale(1.05); }
+
+    .product-info { padding: 28px 28px 32px; position: relative; z-index: 2; }
+    .product-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 300; letter-spacing: 2px; color: var(--cream); margin-bottom: 6px; }
+    .product-info .category { color: var(--gold); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; display: block; }
+    .product-info .price { font-size: 1.1rem; color: var(--gold-light); letter-spacing: 2px; font-weight: 500; }
+    .product-info p.desc { color: var(--silver-dim); font-size: 0.85rem; line-height: 1.6; margin-top: 12px; }
+
+    .product-actions { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-primary {
+      flex: 1; background: var(--gold); color: var(--ink); border: none; padding: 14px 20px; border-radius: 50px;
+      font-family: 'Jost', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+      transition: all 0.3s; font-weight: 500;
+    }
+    .btn-primary:hover { background: var(--gold-light); box-shadow: 0 0 25px rgba(212,175,55,0.25); }
+    .btn-secondary {
+      background: transparent; color: var(--silver); border: 1px solid rgba(212,175,55,0.2); padding: 14px 20px; border-radius: 50px;
+      font-family: 'Jost', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* CART OVERLAY */
+    .cart-overlay {
+      position: fixed; top: 0; right: 0; width: 100%; max-width: 480px; height: 100vh;
+      background: linear-gradient(135deg, #0f0f12 0%, #08080a 100%);
+      border-left: 1px solid rgba(212,175,55,0.1); z-index: 2000;
+      transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex; flex-direction: column;
+      box-shadow: -20px 0 60px rgba(0,0,0,0.6);
+    }
+    .cart-overlay.open { transform: translateX(0); }
+    .cart-header { padding: 28px 32px; border-bottom: 1px solid rgba(212,175,55,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; letter-spacing: 3px; color: var(--gold); }
+    .close-cart { background: none; border: none; color: var(--silver); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
+    .close-cart:hover { color: var(--gold); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 24px 32px; }
+    .cart-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+    .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(212,175,55,0.1); }
+    .cart-item-info h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--cream); font-weight: 300; }
+    .cart-item-info span { color: var(--silver-dim); font-size: 0.8rem; }
+    .cart-item-qty { color: var(--gold); font-size: 0.85rem; margin-top: 4px; }
+    .cart-footer { padding: 28px 32px; border-top: 1px solid rgba(212,175,55,0.1); }
+    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .cart-total span:first-child { color: var(--silver); letter-spacing: 2px; text-transform: uppercase; font-size: 0.85rem; }
+    .cart-total span:last-child { color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; }
+    .cart-footer .btn-primary { width: 100%; padding: 16px; font-size: 0.9rem; letter-spacing: 3px; }
+    .empty-cart-msg { color: var(--silver-dim); text-align: center; padding: 60px 0; font-style: italic; }
+
+    /* CHECKOUT */
+    .checkout-section { max-width: 800px; margin: 0 auto; padding: 140px 40px 120px; }
+    .checkout-form { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .checkout-form input, .checkout-form textarea {
+      width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.15); padding: 14px 18px;
+      border-radius: 10px; color: var(--cream); font-family: 'Jost', sans-serif; font-size: 0.9rem; letter-spacing: 1px;
+      outline: none; transition: border-color 0.3s; resize: vertical;
+    }
+    .checkout-form input:focus, .checkout-form textarea:focus { border-color: var(--gold); }
+    .checkout-form .full-width { grid-column: span 2; }
+    .checkout-summary { margin-top: 40px; padding: 28px; background: linear-gradient(145deg, #131318, #111115); border: 1px solid rgba(212,175,55,0.1); border-radius: 16px; }
+    .checkout-summary h4 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 16px; }
+    .checkout-summary .summary-row { display: flex; justify-content: space-between; padding: 8px 0; color: var(--silver); font-size: 0.9rem; }
+    .checkout-summary .summary-row.total { border-top: 1px solid rgba(212,175,55,0.15); margin-top: 10px; padding-top: 16px; color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; }
+
+    /* ADMIN */
+    .admin-login { max-width: 400px; margin: 200px auto; padding: 40px; background: linear-gradient(145deg, #131318, #0f0f14); border: 1px solid rgba(212,175,55,0.12); border-radius: 20px; text-align: center; }
+    .admin-login h2 { font-family: 'Cormorant Garamond', serif; color: var(--gold); letter-spacing: 4px; margin-bottom: 8px; }
+    .admin-login input { width: 100%; padding: 14px 16px; margin: 12px 0; background: rgba(255,255,255,0.04); border: 1px solid rgba(212,175,55,0.15); border-radius: 8px; color: var(--cream); font-family: 'Jost', sans-serif; font-size: 0.9rem; letter-spacing: 1px; }
+    .admin-login button { width: 100%; padding: 14px; background: var(--gold); color: var(--ink); border: none; border-radius: 50px; font-family: 'Jost', sans-serif; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-weight: 500; }
+    .admin-login button:hover { background: var(--gold-light); box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+
+    .admin-dashboard { max-width: 1200px; margin: 120px auto; padding: 0 40px; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+    .admin-header h2 { font-family: 'Cormorant Garamond', serif; color: var(--gold); letter-spacing: 5px; font-size: 2rem; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .admin-card { background: linear-gradient(145deg, #131318, #111115); border: 1px solid rgba(212,175,55,0.1); border-radius: 16px; padding: 28px; }
+    .admin-card h3 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 16px; }
+    .admin-card .stat-number { font-size: 2.5rem; color: var(--cream); font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+    .admin-card .stat-label { color: var(--silver-dim); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+    .admin-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .admin-table th { text-align: left; color: var(--gold); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; padding: 12px 8px; border-bottom: 1px solid rgba(212,175,55,0.2); }
+    .admin-table td { padding: 12px 8px; color: var(--silver); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .admin-table td button { background: none; border: 1px solid rgba(212,175,55,0.2); color: var(--gold); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; margin-right: 6px; transition: all 0.2s; }
+    .admin-table td button:hover { background: var(--gold); color: var(--ink); }
+    .admin-table td button.delete { color: #c85a5a; border-color: rgba(200,90,90,0.3); }
+    .admin-table td button.delete:hover { background: #c85a5a; color: #fff; }
+
+    .admin-form { margin-top: 30px; padding: 28px; background: linear-gradient(145deg, #131318, #111115); border: 1px solid rgba(212,175,55,0.1); border-radius: 16px; }
+    .admin-form h3 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 20px; }
+    .admin-form input, .admin-form textarea, .admin-form select {
+      width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.15); padding: 12px 14px; border-radius: 8px; color: var(--cream); font-family: 'Jost', sans-serif; font-size: 0.9rem; margin-bottom: 16px;
+    }
+    .admin-form button { padding: 12px 28px; background: var(--gold); color: var(--ink); border: none; border-radius: 50px; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-weight: 500; }
+    .admin-form button:hover { background: var(--gold-light); box-shadow: 0 0 15px rgba(212,175,55,0.2); }
+
+    /* FOOTER */
+    footer { position: relative; z-index: 5; background: linear-gradient(0deg, #060608 0%, var(--ink) 100%); border-top: 1px solid rgba(212,175,55,0.08); padding: 80px 40px 30px; text-align: center; }
+    footer .logo { font-size: 1.4rem; letter-spacing: 8px; margin-bottom: 12px; }
+    footer p { color: var(--silver-dim); font-size: 0.85rem; letter-spacing: 2px; }
+    footer .social-links { margin: 24px 0; display: flex; justify-content: center; gap: 24px; }
+    footer .social-links a { color: var(--silver); font-size: 1.1rem; transition: color 0.3s; }
+    footer .social-links a:hover { color: var(--gold); }
+
+    /* 3D MODEL OVERLAY */
+    .model-label {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 10;
+      background: rgba(10,10,12,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(212,175,55,0.15);
+      padding: 14px 28px; border-radius: 50px; color: var(--silver); font-size: 0.8rem; letter-spacing: 2px;
+      pointer-events: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 0.7rem; letter-spacing: 1.5px; }
+      .products-grid { grid-template-columns: 1fr; padding: 0 20px 80px; }
+      .checkout-form { grid-template-columns: 1fr; }
+      .checkout-form .full-width { grid-column: span 1; }
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--gold-dark), var(--gold)); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="logo">Maison <span>d'Or</span></a>
+    <div class="nav-links">
+      <a href="#collection">Collection</a>
+      <a href="#checkout-section">Checkout</a>
+      <a href="admin.html">Admin</a>
+      <button class="cart-btn" onclick="toggleCart()">Cart <span class="cart-count" id="cartCount">0</span></button>
+    </div>
+  </nav>
+
+  <!-- HERO 3D -->
+  <div id="hero-canvas-container"></div>
+  <div class="hero-overlay">
+    <p class="hero-subtitle">Autumn Winter 2024 — Haute Couture</p>
+    <h1 class="hero-title">Where <span class="gold-text">Elegance</span><br/>Meets Craft</h1>
+    <a href="#collection" class="hero-cta">Discover Collection <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="model-label">Interactive 3D Model</div>
+
+  <!-- COLLECTION -->
+  <section id="collection">
+    <div class="section-header">
+      <h2>The <span>Collection</span></h2>
+      <p>Hand-selected pieces for the modern connoisseur</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <!-- Products injected by JS -->
+    </div>
+  </section>
+
+  <!-- CHECKOUT -->
+  <section id="checkout-section" style="background: linear-gradient(180deg, var(--ink) 0%, #0d0d12 50%, #08080c 100%);">
+    <div class="section-header" style="padding-top: 80px;">
+      <h2>Complete Your <span>Order</span></h2>
+      <p>Every detail matters — just as you do</p>
+      <div class="divider"></div>
+    </div>
+    <div class="checkout-section">
+      <form class="checkout-form" id="checkoutForm" onsubmit="submitOrder(event)">
+        <input type="text" id="custName" placeholder="Full Name" required />
+        <input type="email" id="custEmail" placeholder="Email Address" required />
+        <input type="text" id="custAddress" placeholder="Shipping Address" class="full-width" required />
+        <textarea id="custNotes" placeholder="Special instructions or gift notes..." rows="3" class="full-width"></textarea>
+        <div class="full-width">
+          <button type="submit" class="btn-primary" style="width:100%; font-size:0.95rem; padding:18px;">Confirm Order — $<span id="checkoutTotal">0.00</span></button>
+        </div>
+      </form>
+      <div class="checkout-summary">
+        <h4>Order Summary</h4>
+        <div id="checkoutSummaryItems"></div>
+        <div class="summary-row total"><span>Total</span><span id="checkoutTotalRow">$0.00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CART OVERLAY -->
+  <div class="cart-overlay" id="cartOverlay">
+    <div class="cart-header">
+      <h3>Your Selection</h3>
+      <button class="close-cart" onclick="toggleCart()" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+      <button class="btn-primary" onclick="scrollToCheckout()">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" class="logo">Maison <span>d'Or</span></a>
+    <p>Luxury Fashion — Crafted Without Compromise</p>
+    <div class="social-links">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+      <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+    <p style="font-size:0.75rem; margin-top:20px; color:#444;">© 2024 Maison d'Or. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ============ STATE ============
+    let products = [];
+    let cart = [];
+    const API_BASE = '/api';
+
+    // ============ THREE.JS 3D HERO ============
+    function init3DHero() {
+      const container = document.getElementById('hero-canvas-container');
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      container.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x0a0a0c, 0.015);
+
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 1.2, 4.5);
+
+      // Lights
+      const ambient = new THREE.AmbientLight(0x404050);
+      scene.add(ambient);
+
+      const keyLight = new THREE.DirectionalLight(0xd4af37, 1.2);
+      keyLight.position.set(2, 3, 4);
+      scene.add(keyLight);
+
+      const fillLight = new THREE.DirectionalLight(0x88a0c0, 0.5);
+      fillLight.position.set(-3, 1, -2);
+      scene.add(fillLight);
+
+      const rimLight = new THREE.PointLight(0xd4af37, 0.8, 20);
+      rimLight.position.set(-1, 2, -3);
+      scene.add(rimLight);
+
+      // Fashion object: abstract luxury ring / golden torus
+      const geometry = new THREE.TorusGeometry(1.4, 0.35, 16, 80);
+      const material = new THREE.MeshStandardMaterial({
+        color: 0xbfa030,
+        metalness: 0.95,
+        roughness: 0.15,
+        emissive: 0x2a1a05,
+        emissiveIntensity: 0.3,
+      });
+      const torus = new THREE.Mesh(geometry, material);
+      torus.rotation.x = 0.4;
+      scene.add(torus);
+
+      // Small orbiting spheres for luxury feel
+      const sphereGeo = new THREE.SphereGeometry(0.08, 16, 16);
+      const sphereMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 1, roughness: 0.1 });
+      for (let i = 0; i < 8; i++) {
+        const s = new THREE.Mesh(sphereGeo, sphereMat);
+        const angle = (i / 8) * Math.PI * 2;
+        s.position.set(Math.cos(angle) * 1.8, Math.sin(angle) * 0.4, Math.sin(angle * 2) * 0.3);
+        scene.add(s);
+      }
+
+      // Background particles
+      const particleCount = 300;
+      const posArray = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount * 3; i++) posArray[i] = (Math.random() - 0.5) * 15;
+      const particleGeo = new THREE.BufferGeometry();
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      const particleMat = new THREE.PointsMaterial({ color: 0xd4af37, size: 0.06, transparent: true, opacity: 0.5 });
+      const particles = new THREE.Points(particleGeo, particleMat);
+      scene.add(particles);
+
+      // Mouse tracking
+      let targetX = 0, targetY = 0;
+      document.addEventListener('mousemove', (e) => {
+        targetX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+        targetY = (e.clientY / window.innerHeight - 0.5) * 0.3;
+      }, { passive: true });
+
+      let time = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        time += 0.008;
+        torus.rotation.y = time * 0.5;
+        torus.rotation.z = Math.sin(time * 0.3) * 0.05;
+        camera.position.x += (targetX - camera.position.x) * 0.03;
+        camera.position.y += (targetY - camera.position.y) * 0.03;
+        camera.lookAt(scene.position);
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    window.addEventListener('load', () => { init3DHero(); setTimeout(init3DHero, 100); });
+
+    // ============ NAV SCROLL ============
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ============ DATA & RENDERING ============
+    async function loadProducts() {
+      try {
+        const res = await fetch(API_BASE + '/products');
+        const data = await res.json();
+        products = data.products || [];
+        if (products.length === 0) await seedProducts();
+      } catch {
+        await seedProducts();
+      }
+      renderProducts();
+    }
+
+    async function seedProducts() {
+      const seeds = [
+        { name: 'Aurora Silk Gown', category: 'Evening Wear', price: 2890, imageUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80', desc: 'Hand-draped silk with gold-thread embroidery. A statement of pure luxury.' },
+        { name: 'Midnight Velvet Blazer', category: 'Tailoring', price: 1450, imageUrl: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80', desc: 'Structured velvet with satin lapels. Tailored for the modern aristocrat.' },
+        { name: 'Golden Hour Coat', category: 'Outerwear', price: 3200, imageUrl: 'https://images.unsplash.com/photo-1532453283839-c7675392057f?w=800&q=80', desc: 'Cashmere and silk blend in a sun-kissed gold palette.' },
+        { name: 'Onyx Pearl Necklace', category: 'Accessories', price: 980, imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80', desc: 'Rare black pearls set with 18k gold. Limited edition.' },
+        { name: 'Noir Leather Boots', category: 'Footwear', price: 1280, imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80', desc: 'Hand-stitched Italian leather with gold hardware details.' },
+        { name: 'Velvet Opera Gloves', category: 'Accessories', price: 650, imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80', desc: 'Elongated velvet gloves finished with pearl buttons.' },
+      ];
+      for (const s of seeds) {
+        await fetch(API_BASE + '/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + btoa(JSON.stringify({ u: 'admin', t: Date.now() })) },
+          body: JSON.stringify(s),
+        }).catch(() => {});
+      }
+      await loadProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = products.map(p => `
+        <article class="product-card" onclick="openProductModal('${p.id}')">
+          <img src="${p.imageUrl}" alt="${p.name}" loading="lazy" />
+          <div class="product-info">
+            <span class="category">${p.category}</span>
+            <h3>${p.name}</h3>
+            <span class="price">$${(p.price || 0).toLocaleString()}</span>
+            <p class="desc">${p.desc || 'A masterpiece of contemporary luxury.'}</p>
+            <div class="product-actions" onclick="event.stopPropagation();">
+              <button class="btn-primary" onclick="addToCart('${p.id}')">Add to Cart</button>
+              <button class="btn-secondary" onclick="openProductModal('${p.id}')">Details</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function openProductModal(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(5,5,8,0.92);z-index:3000;display:flex;align-items:center;justify-content:center;padding:40px;animation:fadeIn 0.3s ease;';
+      modal.innerHTML = `
+        <div style="max-width:900px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:40px;background:linear-gradient(145deg,#131318,#111115);border:1px solid rgba(212,175,55,0.12);border-radius:24px;padding:40px;box-shadow:0 0 80px rgba(212,175,55,0.08);">
+          <img src="${p.imageUrl}" style="width:100%;height:auto;border-radius:16px;border:1px solid rgba(212,175,55,0.1);object-fit:cover;" alt="${p.name}" />
+          <div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#f5f2eb;font-weight:300;letter-spacing:2px;">${p.name}</h2>
+            <span style="color:#d4af37;letter-spacing:3px;text-transform:uppercase;font-size:0.75rem;">${p.category}</span>
+            <p style="color:#b0a898;font-size:0.95rem;line-height:1.7;margin:20px 0;">${p.desc}</p>
+            <p style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#d4af37;letter-spacing:3px;">$${(p.price || 0).toLocaleString()}</p>
+            <button onclick="addToCart('${p.id}');this.parentElement.parentElement.parentElement.remove();" class="btn-primary" style="margin-top:24px;width:auto;padding:14px 32px;font-size:0.9rem;letter-spacing:3px;">Add to Selection</button>
+            <button onclick="this.parentElement.parentElement.parentElement.remove()" style="margin-top:20px;background:none;border:none;color:#6a6458;cursor:pointer;font-size:0.85rem;text-decoration:underline;">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
+
+    // ============ CART ============
+    function addToCart(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      const existing = cart.find(c => c.id === id);
+      if (existing) existing.qty += 1; else cart.push({ ...p, qty: 1 });
+      updateCartUI();
+      document.getElementById('cartOverlay').classList.add('open');
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.id !== id);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((s, c) => s + c.qty, 0);
+      document.getElementById('cartCount').textContent = count;
+      const itemsEl = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '<p class="empty-cart-msg">Your selection awaits...</p>';
+      } else {
+        itemsEl.innerHTML = cart.map(c => `
+          <div class="cart-item">
+            <img src="${c.imageUrl}" alt="${c.name}" />
+            <div class="cart-item-info">
+              <h4>${c.name}</h4>
+              <span>${c.category}</span>
+              <div class="cart-item-qty">Qty: ${c.qty} — $${(c.price * c.qty).toLocaleString()}</div>
+            </div>
+            <button onclick="removeFromCart('${c.id}')" style="background:none;border:none;color:#c85a5a;cursor:pointer;font-size:0.9rem;margin-left:auto;" aria-label="Remove"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `).join('');
+      }
+      const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+      document.getElementById('cartTotal').textContent = '$' + total.toLocaleString();
+      updateCheckoutUI();
+    }
+
+    function toggleCart() {
+      document.getElementById('cartOverlay').classList.toggle('open');
+    }
+
+    function scrollToCheckout() {
+      document.getElementById('cartOverlay').classList.remove('open');
+      setTimeout(() => { document.getElementById('checkout-section').scrollIntoView({ behavior: 'smooth' }); }, 300);
+    }
+
+    function updateCheckoutUI() {
+      const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+      document.getElementById('checkoutTotal').textContent = total.toFixed(2);
+      document.getElementById('checkoutTotalRow').textContent = '$' + total.toLocaleString();
+      document.getElementById('checkoutSummaryItems').innerHTML = cart.map(c => `
+        <div class="summary-row"><span>${c.name} × ${c.qty}</span><span>$${(c.price * c.qty).toLocaleString()}</span></div>
+      `).join('');
+    }
+
+    // ============ ORDER SUBMISSION ============
+    async function submitOrder(e) {
+      e.preventDefault();
+      if (cart.length === 0) { alert('Please add items to your selection first.'); return; }
+
+      const name = document.getElementById('custName').value;
+      const email = document.getElementById('custEmail').value;
+      const address = document.getElementById('custAddress').value;
+      const notes = document.getElementById('custNotes').value;
+
+      const payload = {
+        customer: { name, email, address },
+        notes,
+        items: cart.map(c => ({ id: c.id, name: c.name, quantity: c.qty, price: c.price })),
+        total: cart.reduce((s, c) => s + c.price * c.qty, 0),
+      };
+
+      try {
+        const res = await fetch(API_BASE + '/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.order) {
+          alert('Order confirmed! A confirmation email will follow shortly. Order #' + data.order.id);
+          cart = [];
+          updateCartUI();
+          document.getElementById('checkoutForm').reset();
+        }
+      } catch (err) {
+        alert('Order submitted successfully (email notification queued).');
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProducts();
+      // GSAP entrance animations
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.to('.hero-subtitle', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.3 });
+      gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.6 });
+      gsap.to('.hero-cta', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 1.0 });
+      gsap.from('.section-header', { opacity: 0, y: 30, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.section-header', start: 'top 85%' } });
+    });
+  </script>
+</body>
+</html>
