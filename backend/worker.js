@@ -681,17 +681,6 @@ function requireCustomer(request) {
   } catch { return null; }
 }
 
-async function handleGetCustomerOrders(request, env, corsHeaders) {
-  const customerId = requireCustomer(request);
-  if (!customerId) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-  const orders = await env.FASHION_KV.get('orders', 'json') || [];
-  const customers = await env.FASHION_KV.get('customers', 'json') || [];
-  const customer = customers.find(c => c.id === customerId);
-  if (!customer) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-  const customerOrders = orders.filter(o => o.customer?.email === customer.email);
-  return new Response(JSON.stringify({ customerId, orders: customerOrders, count: customerOrders.length }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-}
-
 // ============================================
 // PROMOTIONS
 // ============================================
