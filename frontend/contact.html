@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Maison d'Or</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root { --gold: #d4af37; --ink: #0a0a0c; --cream: #f5f2eb; --silver: #b0a898; --silver-dim: #6a6458; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--ink); color: var(--cream); font-family: 'Jost', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    ::selection { background: rgba(212,175,55,0.25); }
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(180deg, rgba(10,10,12,0.92) 0%, rgba(10,10,12,0) 100%); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(212,175,55,0.08); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 6px; text-transform: uppercase; color: var(--gold); text-decoration: none; font-weight: 300; }
+    .logo span { color: var(--cream); letter-spacing: 10px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { color: var(--silver); text-decoration: none; font-size: 0.78rem; letter-spacing: 2.5px; text-transform: uppercase; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--gold); }
+
+    .page-hero { height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 40px; background: linear-gradient(180deg, #0d0d10 0%, var(--ink) 60%, #08080a 100%); border-bottom: 1px solid rgba(212,175,55,0.08); }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 8vw, 6rem); color: var(--cream); letter-spacing: 8px; font-weight: 300; }
+    .page-hero h1 span { color: var(--gold); }
+    .page-hero p { color: var(--silver); margin-top: 20px; font-size: 1.1rem; letter-spacing: 3px; text-transform: uppercase; }
+
+    .contact-section { max-width: 700px; margin: 100px auto; padding: 0 40px 140px; }
+    .contact-section h2 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 2.5rem; letter-spacing: 5px; margin-bottom: 12px; font-weight: 300; }
+    .contact-section p.subtitle { color: var(--silver); margin-bottom: 48px; font-size: 1rem; line-height: 1.7; }
+
+    .contact-form input, .contact-form textarea {
+      width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.12); padding: 16px 20px; border-radius: 12px; color: var(--cream); font-family: 'Jost', sans-serif; font-size: 0.92rem; letter-spacing: 1px; outline: none; transition: border-color 0.3s, box-shadow 0.3s; margin-bottom: 20px; resize: vertical;
+    }
+    .contact-form input:focus, .contact-form textarea:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212,175,55,0.06); }
+    .contact-form button { padding: 18px 36px; background: var(--gold); color: var(--ink); border: none; border-radius: 50px; font-family: 'Jost', sans-serif; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-weight: 500; }
+    .contact-form button:hover { background: var(--gold-light); box-shadow: 0 0 25px rgba(212,175,55,0.2); }
+
+    .contact-details { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(212,175,55,0.08); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .contact-details h3 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 16px; }
+    .contact-details p { color: var(--silver); font-size: 0.9rem; line-height: 1.8; }
+
+    footer { background: linear-gradient(0deg, #060608 0%, var(--ink) 100%); border-top: 1px solid rgba(212,175,55,0.06); padding: 80px 40px 30px; text-align: center; }
+    footer .logo { font-size: 1.4rem; letter-spacing: 8px; margin-bottom: 12px; display: inline-block; }
+    footer p { color: var(--silver-dim); font-size: 0.85rem; letter-spacing: 2px; line-height: 1.8; }
+    footer .social-links { margin: 24px 0; display: flex; justify-content: center; gap: 24px; }
+    footer .social-links a { color: var(--silver); font-size: 1.1rem; transition: color 0.3s; }
+    footer .social-links a:hover { color: var(--gold); }
+
+    @media (max-width: 768px) { nav { padding: 20px 24px; } .contact-details { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Maison <span>d'Or</span></a>
+    <div class="nav-links">
+      <a href="index.html">Collection</a>
+      <a href="lookbook.html">Lookbook</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <h1>Get in <span>Touch</span></h1>
+    <p>We respond with the same care we craft with</p>
+  </section>
+
+  <section class="contact-section">
+    <h2>Send a Message</h2>
+    <p class="subtitle">Whether you seek a private consultation, a custom piece, or simply want to share your thoughts — we listen.</p>
+    <form class="contact-form" onsubmit="submitContact(event)">
+      <input type="text" id="contactName" placeholder="Your Name" required />
+      <input type="email" id="contactEmail" placeholder="Email Address" required />
+      <textarea id="contactMessage" placeholder="Your message..." rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+
+    <div class="contact-details">
+      <div>
+        <h3>Private Consultations</h3>
+        <p>Available by appointment at our atelier. Each session is dedicated entirely to you — your form, your vision, your story.</p>
+      </div>
+      <div>
+        <h3>Location</h3>
+        <p>Maison d'Or Atelier<br/>Via della Moda, 14<br/>20121 Milano, Italy</p>
+        <p style="margin-top:12px;">Open Tuesday — Saturday<br/>10:00 — 18:00</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="index.html" class="logo">Maison <span>d'Or</span></a>
+    <p>Luxury Fashion — Crafted Without Compromise</p>
+    <div class="social-links">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+      <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = '/api';
+    async function submitContact(e) {
+      e.preventDefault();
+      try {
+        const res = await fetch(API_BASE + '/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: document.getElementById('contactName').value, email: document.getElementById('contactEmail').value, message: document.getElementById('contactMessage').value }) });
+        const data = await res.json();
+        alert(data.message || 'Message received. We will respond shortly.');
+        document.getElementById('contactName').value = ''; document.getElementById('contactEmail').value = ''; document.getElementById('contactMessage').value = '';
+      } catch (err) { alert('Message submitted. We will respond shortly.'); document.getElementById('contactName').value = ''; document.getElementById('contactEmail').value = ''; document.getElementById('contactMessage').value = ''; }
+    }
+  </script>
+</body>
+</html>
