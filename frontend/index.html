@@ -30,11 +30,11 @@
     nav {
       position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
       padding: 28px 60px; display: flex; justify-content: space-between; align-items: center;
-      background: linear-gradient(180deg, rgba(10,10,12,0.92) 0%, rgba(10,10,12,0) 100%);
+      background: linear-gradient(180deg, rgba(250,248,245,0.98) 0%, rgba(250,248,245,0.85) 100%);
       backdrop-filter: blur(16px); border-bottom: 1px solid rgba(212,175,55,0.08);
       transition: padding 0.4s ease;
     }
-    nav.scrolled { padding: 16px 60px; background: rgba(10,10,12,0.95); border-bottom-color: rgba(212,175,55,0.15); }
+    nav.scrolled { padding: 16px 60px; background: rgba(250,248,245,0.98); border-bottom-color: rgba(191,166,61,0.25); }
     .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 6px; text-transform: uppercase; color: var(--gold); text-decoration: none; font-weight: 300; }
     .logo span { color: var(--cream); font-weight: 600; letter-spacing: 10px; }
     .nav-links { display: flex; gap: 32px; align-items: center; }
@@ -82,15 +82,15 @@
     }
     .hero-overlay > * { pointer-events: auto; }
     .hero-subtitle {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; color: var(--silver);
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; color: #5a5548;
       letter-spacing: 4px; margin-bottom: 20px; opacity: 0; transform: translateY(20px);
     }
     .hero-title {
       font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 10vw, 8rem); font-weight: 300;
-      line-height: 1.05; letter-spacing: 6px; color: var(--cream); text-transform: uppercase;
-      opacity: 0; transform: translateY(30px); text-shadow: 0 0 100px rgba(212,175,55,0.12);
+      line-height: 1.05; letter-spacing: 6px; color: #1a1714; text-transform: uppercase;
+      opacity: 0; transform: translateY(30px); text-shadow: 0 0 100px rgba(191,166,61,0.08);
     }
-    .hero-title .gold-text { color: var(--gold); font-weight: 600; letter-spacing: 14px; }
+    .hero-title .gold-text { color: #bfa63d; font-weight: 600; letter-spacing: 14px; }
     .hero-cta {
       margin-top: 50px; display: inline-flex; align-items: center; gap: 16px;
       border: 1px solid rgba(212,175,55,0.35); padding: 18px 40px; border-radius: 50px;
