@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lookbook — Maison d'Or</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root { --gold: #d4af37; --ink: #0a0a0c; --cream: #f5f2eb; --silver: #b0a898; --silver-dim: #6a6458; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--ink); color: var(--cream); font-family: 'Jost', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    ::selection { background: rgba(212,175,55,0.25); }
+
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(180deg, rgba(10,10,12,0.92) 0%, rgba(10,10,12,0) 100%); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(212,175,55,0.08); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 6px; text-transform: uppercase; color: var(--gold); text-decoration: none; font-weight: 300; }
+    .logo span { color: var(--cream); letter-spacing: 10px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { color: var(--silver); text-decoration: none; font-size: 0.78rem; letter-spacing: 2.5px; text-transform: uppercase; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--gold); }
+
+    .page-hero { height: 55vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 40px; background: linear-gradient(180deg, var(--ink) 0%, #0a0a0c 60%, #060608 100%); border-bottom: 1px solid rgba(212,175,55,0.08); position: relative; overflow: hidden; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 8vw, 6rem); color: var(--cream); letter-spacing: 8px; font-weight: 300; }
+    .page-hero h1 span { color: var(--gold); }
+    .page-hero p { color: var(--silver); margin-top: 20px; font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; }
+
+    .lookbook-grid { max-width: 1300px; margin: 100px auto; padding: 0 40px 120px; display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 30px; }
+    .look-item { position: relative; overflow: hidden; border-radius: 20px; border: 1px solid rgba(212,175,55,0.08); }
+    .look-item img { width: 100%; height: 480px; object-fit: cover; display: block; transition: transform 0.8s ease, filter 0.5s; filter: grayscale(30%) contrast(105%) brightness(0.9); }
+    .look-item:hover img { transform: scale(1.05); filter: grayscale(0%) contrast(110%) brightness(1); }
+    .look-item .look-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 36px 28px; background: linear-gradient(0deg, rgba(10,10,12,0.85) 0%, transparent 100%); }
+    .look-item .look-overlay h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--cream); letter-spacing: 3px; font-weight: 300; }
+    .look-item .look-overlay span { color: var(--gold); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; display: block; margin-top: 6px; }
+
+    .content-section { max-width: 800px; margin: 60px auto 0; padding: 0 40px; text-align: center; }
+    .content-section h2 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 2rem; letter-spacing: 4px; margin-bottom: 24px; }
+    .content-section p { color: var(--silver); line-height: 1.9; font-size: 1rem; }
+
+    footer { background: linear-gradient(0deg, #060608 0%, var(--ink) 100%); border-top: 1px solid rgba(212,175,55,0.06); padding: 80px 40px 30px; text-align: center; }
+    footer .logo { font-size: 1.4rem; letter-spacing: 8px; margin-bottom: 12px; display: inline-block; }
+    footer p { color: var(--silver-dim); font-size: 0.85rem; letter-spacing: 2px; line-height: 1.8; }
+
+    @media (max-width: 768px) { nav { padding: 20px 24px; } .lookbook-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Maison <span>d'Or</span></a>
+    <div class="nav-links">
+      <a href="index.html">Collection</a>
+      <a href="lookbook.html">Lookbook</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <h1>The <span>Lookbook</span></h1>
+    <p>Visual essays on form and elegance</p>
+  </section>
+
+  <section class="lookbook-grid">
+    <a href="#" class="look-item">
+      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80" alt="Editorial" />
+      <div class="look-overlay"><h3>Golden Light</h3><span>Autumn Editorial — 2024</span></div>
+    </a>
+    <a href="#" class="look-item">
+      <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=80" alt="Editorial" />
+      <div class="look-overlay"><h3>Midnight Velvet</h3><span>Evening Wear — 2024</span></div>
+    </a>
+    <a href="#" class="look-item">
+      <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80" alt="Editorial" />
+      <div class="look-overlay"><h3>Silk & Shadow</h3><span>Ready-to-Wear — 2024</span></div>
+    </a>
+    <a href="#" class="look-item">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80" alt="Editorial" />
+      <div class="look-overlay"><h3>Noir Statement</h3><span>Accessories — 2024</span></div>
+    </a>
+  </section>
+
+  <section class="content-section">
+    <h2>Crafted Without Compromise</h2>
+    <p>Our lookbook is not a catalog — it is a visual philosophy. Each image captures not only a garment but an attitude: the quiet confidence of a tailored coat, the poetry of silk in motion, the enduring beauty of gold against black. We believe fashion is an art form worthy of the same reverence as painting or architecture. This is our vision.</p>
+  </section>
+
+  <footer>
+    <a href="index.html" class="logo">Maison <span>d'Or</span></a>
+    <p>Luxury Fashion — Crafted Without Compromise</p>
+    <div style="margin-top:24px;">
+      <a href="index.html" style="color:#b0a898;text-decoration:none;font-size:0.75rem;letter-spacing:2.5px;text-transform:uppercase;margin:0 12px;transition:color 0.3s;">Back to Collection</a>
+      <a href="about.html" style="color:#b0a898;text-decoration:none;font-size:0.75rem;letter-spacing:2.5px;text-transform:uppercase;margin:0 12px;transition:color 0.3s;">About</a>
+      <a href="contact.html" style="color:#b0a898;text-decoration:none;font-size:0.75rem;letter-spacing:2.5px;text-transform:uppercase;margin:0 12px;transition:color 0.3s;">Contact</a>
+    </div>
+  </footer>
+</body>
+</html>
